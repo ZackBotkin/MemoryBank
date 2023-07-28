@@ -11,6 +11,6 @@ class ContextManager(object):
     def record_memory(self, memory_text):
         self.query_runner.insert_memory(memory_text)
 
-    def get_memories(self):
-        memories = self.query_runner.get_memories()
+    def get_memories(self, date=None):
+        memories = self.query_runner.get_memories(date)
         return memories

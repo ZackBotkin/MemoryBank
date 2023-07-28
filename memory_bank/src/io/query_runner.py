@@ -37,6 +37,8 @@ class QueryRunner(object):
         sql_str = "INSERT INTO memories ('date', 'text') VALUES ('%s', '%s')" % (date, memory_text)
         self.run_sql(sql_str)
 
-    def get_memories(self):
+    def get_memories(self, date=None):
         sql_str = "SELECT * FROM memories"
+        if date is not None:
+            sql_str += " WHERE date = '%s'" % date
         return self.fetch_sql(sql_str)
