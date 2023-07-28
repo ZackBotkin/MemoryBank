@@ -115,9 +115,13 @@ class KeywordSearchMenu(InteractiveMenu):
         results = self.manager.keyword_search(term)
         if len(results.keys()) > 0:
             print("")
+        if len(results.keys()) == 0:
+            print("")
+            print("No memories containing the term(s) \"%s\"" % term)
+            print("")
         for date, memories in results.items():
             print(date)
+            print("")
             for memory in memories:
                 print("\t > %s" % memory)
-        if len(results.keys()) > 0:
             print("")
