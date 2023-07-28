@@ -42,3 +42,11 @@ class QueryRunner(object):
         if date is not None:
             sql_str += " WHERE date = '%s'" % date
         return self.fetch_sql(sql_str)
+
+    def delete_memory(self, date, text):
+        sql_str = "DELETE FROM memories WHERE date = '%s' AND text = '%s'" % (date, text)
+        self.run_sql(sql_str)
+
+    def get_memories_matching_search(self, term):
+        sql_str = "SELECT * FROM memories WHERE INSTR(text, '%s')" % term
+        return self.fetch_sql(sql_str)
