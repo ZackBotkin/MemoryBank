@@ -25,16 +25,23 @@ class QueryRunner(object):
         self.create_memories_table()
 
     def create_memories_table(self):
-        sql_str = "CREATE TABLE memories(date DATE, text VARCHAR)"
+        sql_str = "CREATE TABLE memories(date DATE, text VARCHAR, hour INT, minute INT)"
         try:
             self.run_sql(sql_str)
         except sqlite3.OperationalError:
             pass
 
-    def insert_memory(self, memory_text, date=None):
+    def insert_memory(self, memory_text, date=None, hour=None, minute=None):
         if date is None:
             date = datetime.now().strftime("%Y-%m-%d")
-        sql_str = "INSERT INTO memories ('date', 'text') VALUES ('%s', '%s')" % (date, memory_text)
+        if hour and minute is None:
+            sql_str = "INSERT INTO memories ('date', 'text') VALUES ('%s', '%s')" % (date, memory_text)
+        elif minute is None:
+            sql_str = "INSERT INTO memories ('date', 'text', 'hour') VALUES ('%s', '%s', '%s')" % (date, memory_text, hour)
+        elif hour is None:
+            raise Exception("cannot have a minute without hour")
+        else:
+            sql_str = "INSERT INTO memories ('date', 'text', 'hour', 'minute') VALUES ('%s', '%s', '%s', '%s')" % (date, memory_text, hour, minute)
         self.run_sql(sql_str)
 
     def get_memories(self, date=None):

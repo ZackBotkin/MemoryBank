@@ -37,6 +37,13 @@ class RecordMemoryMenu(InteractiveMenu):
                     "return_as": "date",
                     "default": datetime.now().strftime("%Y-%m-%d"),
                     "allow_empty": False
+                },
+                {
+                    "question": "What time did this occur? (HH:MM in military time) Hit enter for current time",
+                    "expected_response_type": "HHMM_Time",
+                    "return_as": "time",
+                    "default": datetime.now().strftime("%H:%M"),
+                    "allow_empty": True
                 }
             ]
         )
@@ -50,7 +57,13 @@ class RecordMemoryMenu(InteractiveMenu):
                 return
         memory = form_results["memory"]["value"]
         date = form_results["date"]["value"]
-        self.manager.record_memory(memory, date)
+        time = form_results["time"]["value"] if "time" in form_results else None
+        if time is not None:
+            hour, minute = time.split(':')
+        else:
+            hour = None
+            minute = None
+        self.manager.record_memory(memory, date, hour, minute)
 
 class ReadMemoriesMenu(InteractiveMenu):
 
@@ -78,7 +91,22 @@ class ReadTodaysMemoriesMenu(InteractiveMenu):
         print(date)
         memories = self.manager.get_memories(date)
         for memory in memories:
-            print("\t > %s" % memory[1])
+            memory_text = memory[1]
+            memory_hour = memory[2]
+            am_pm = "AM"
+            if memory_hour is not None and memory_hour > 12:
+                memory_hour = 24 - memory_hour
+                am_pm = "PM"
+            memory_minute = memory[3]
+            if memory_hour is None and memory_minute is None:
+                print("\t          > %s" % memory_text)
+            elif memory_hour is None and memory_minute is not None:
+                raise Exception("Minute should not be without an hour")
+            elif memory_hour is not None and memory_minute is None:
+                print("\t %s    %s > %s" % (memory_hour, am_pm, memory_text))
+            else:
+                print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
+
         print("")
 
 class ReadYesterdaysMemoriesMenu(InteractiveMenu):
