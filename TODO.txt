@@ -3,12 +3,14 @@
 <features>
     - configuration to allow certain terms to auto filter out
     - auto database backup
-    - allow time to be displayed if there is a time
+    - add the ability to display time across all reads
 
 <bug>
     - weeks feature does not appear to work as expected
+    - weird formatting on the time
 
 
 ### done
 <features>
     - allow time to be captured and saved
+    - allow time to be displayed if there is a time

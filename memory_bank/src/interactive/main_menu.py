@@ -2,6 +2,23 @@
 from datetime import datetime, timedelta
 from interactive_menu.src.interactive_menu import InteractiveMenu
 
+def print_memories(memories):
+    for memory in memories:
+        memory_text = memory[1]
+        memory_hour = memory[2]
+        am_pm = "AM"
+        if memory_hour is not None and memory_hour > 12:
+            memory_hour = 24 - memory_hour
+            am_pm = "PM"
+        memory_minute = memory[3]
+        if memory_hour is None and memory_minute is None:
+            print("\t          > %s" % memory_text)
+        elif memory_hour is None and memory_minute is not None:
+            raise Exception("Minute should not be without an hour")
+        elif memory_hour is not None and memory_minute is None:
+            print("\t %s    %s > %s" % (memory_hour, am_pm, memory_text))
+        else:
+            print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
 
 class MainMenu(InteractiveMenu):
 
@@ -86,27 +103,12 @@ class ReadTodaysMemoriesMenu(InteractiveMenu):
         return "Today"
 
     def main_loop(self):
-        date = datetime.now().strftime("%Y-%m-%d")
+        date = datetime.now()
+        date_str = date.strftime("%Y-%m-%d")
         print("")
-        print(date)
-        memories = self.manager.get_memories(date)
-        for memory in memories:
-            memory_text = memory[1]
-            memory_hour = memory[2]
-            am_pm = "AM"
-            if memory_hour is not None and int(memory_hour) > 12:
-                memory_hour = 24 - memory_hour
-                am_pm = "PM"
-            memory_minute = memory[3]
-            if memory_hour is None and memory_minute is None:
-                print("\t          > %s" % memory_text)
-            elif memory_hour is None and memory_minute is not None:
-                raise Exception("Minute should not be without an hour")
-            elif memory_hour is not None and memory_minute is None:
-                print("\t %s    %s > %s" % (memory_hour, am_pm, memory_text))
-            else:
-                print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
-
+        print(date_str)
+        memories = self.manager.get_memories(date_str)
+        print_memories(memories)
         print("")
 
 class ReadYesterdaysMemoriesMenu(InteractiveMenu):
@@ -119,22 +121,7 @@ class ReadYesterdaysMemoriesMenu(InteractiveMenu):
         print("")
         print(date)
         memories = self.manager.get_memories(date)
-        for memory in memories:
-            memory_text = memory[1]
-            memory_hour = memory[2]
-            am_pm = "AM"
-            if memory_hour is not None and memory_hour > 12:
-                memory_hour = 24 - memory_hour
-                am_pm = "PM"
-            memory_minute = memory[3]
-            if memory_hour is None and memory_minute is None:
-                print("\t          > %s" % memory_text)
-            elif memory_hour is None and memory_minute is not None:
-                raise Exception("Minute should not be without an hour")
-            elif memory_hour is not None and memory_minute is None:
-                print("\t %s    %s > %s" % (memory_hour, am_pm, memory_text))
-            else:
-                print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
+        print_memories(memories)
         print("")
 
 class ReadWeekMemoriesMenu(InteractiveMenu):
@@ -158,8 +145,7 @@ class ReadWeekMemoriesMenu(InteractiveMenu):
             date = start_of_prior_week + timedelta(days=i)
             memories = self.manager.get_memories(date.strftime("%Y-%m-%d"))
             print(date.strftime("%A: %Y-%m-%d"))
-            for memory in memories:
-                print("\t > %s" % memory[1])
+            print_memories(memories)
             print("\n")
 
     def main_loop(self):
@@ -178,8 +164,7 @@ class ReadDatesMemoriesMenu(InteractiveMenu):
         print(date)
 
         memories = self.manager.get_memories(date)
-        for memory in memories:
-            print("\t > %s" % memory[1])
+        print_memories(memories)
         print("")
 
 class RemoveMemoryMenu(InteractiveMenu):
