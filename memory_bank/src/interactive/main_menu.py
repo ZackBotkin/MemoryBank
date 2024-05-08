@@ -132,17 +132,15 @@ class ReadWeekMemoriesMenu(InteractiveMenu):
     def print_prior_week_memories(self):
         # Get today's date
         today = datetime.now()
-        # Calculate the start date of the prior week
-        start_of_prior_week = today - timedelta(days=today.weekday() + 7)
-        # Calculate the end date of the prior week
-        end_of_prior_week = start_of_prior_week + timedelta(days=6)
+
+        seven_days_ago = today - timedelta(days=7)
 
         # Print out the date range for the prior week
-        print(f"Memories from {start_of_prior_week.strftime('%Y-%m-%d')} to {end_of_prior_week.strftime('%Y-%m-%d')}\n")
+        print(f"Memories from {seven_days_ago.strftime('%Y-%m-%d')} to {today.strftime('%Y-%m-%d')}\n")
 
-        # Get memories for each day of the prior week
-        for i in range(7):
-            date = start_of_prior_week + timedelta(days=i)
+        # Get memories for all of last week
+        for i in range(8):
+            date = seven_days_ago + timedelta(days=i)
             memories = self.manager.get_memories(date.strftime("%Y-%m-%d"))
             print(date.strftime("%A: %Y-%m-%d"))
             print_memories(memories)
