@@ -1,7 +1,6 @@
 ### todo
 
 <features>
-    - allow time to be captured and saved
     - configuration to allow certain terms to auto filter out
     - auto database backup
     - allow time to be displayed if there is a time
@@ -10,6 +9,6 @@
     - weeks feature does not appear to work as expected
 
 
-
-
 ### done
+<features>
+    - allow time to be captured and saved
