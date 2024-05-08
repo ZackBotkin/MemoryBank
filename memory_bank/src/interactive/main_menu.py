@@ -8,7 +8,7 @@ def print_memories(memories):
         memory_hour = memory[2]
         am_pm = "AM"
         if memory_hour is not None and memory_hour > 12:
-            memory_hour = 24 - memory_hour
+            memory_hour = memory_hour % 12
             am_pm = "PM"
         memory_minute = memory[3]
         if memory_hour is None and memory_minute is None:
