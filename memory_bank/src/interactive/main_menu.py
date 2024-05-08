@@ -39,10 +39,10 @@ class RecordMemoryMenu(InteractiveMenu):
                     "allow_empty": False
                 },
                 {
-                    "question": "What time did this occur? (HH:MM in military time) Hit enter for current time",
+                    "question": "What time did this occur? (HH:MM in military time) Hit enter to skip",
                     "expected_response_type": "HHMM_Time",
                     "return_as": "time",
-                    "default": datetime.now().strftime("%H:%M"),
+                    "default": None,
                     "allow_empty": True
                 }
             ]
@@ -94,7 +94,7 @@ class ReadTodaysMemoriesMenu(InteractiveMenu):
             memory_text = memory[1]
             memory_hour = memory[2]
             am_pm = "AM"
-            if memory_hour is not None and memory_hour > 12:
+            if memory_hour is not None and int(memory_hour) > 12:
                 memory_hour = 24 - memory_hour
                 am_pm = "PM"
             memory_minute = memory[3]
@@ -120,7 +120,21 @@ class ReadYesterdaysMemoriesMenu(InteractiveMenu):
         print(date)
         memories = self.manager.get_memories(date)
         for memory in memories:
-            print("\t > %s" % memory[1])
+            memory_text = memory[1]
+            memory_hour = memory[2]
+            am_pm = "AM"
+            if memory_hour is not None and memory_hour > 12:
+                memory_hour = 24 - memory_hour
+                am_pm = "PM"
+            memory_minute = memory[3]
+            if memory_hour is None and memory_minute is None:
+                print("\t          > %s" % memory_text)
+            elif memory_hour is None and memory_minute is not None:
+                raise Exception("Minute should not be without an hour")
+            elif memory_hour is not None and memory_minute is None:
+                print("\t %s    %s > %s" % (memory_hour, am_pm, memory_text))
+            else:
+                print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
         print("")
 
 class ReadWeekMemoriesMenu(InteractiveMenu):

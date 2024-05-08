@@ -34,7 +34,7 @@ class QueryRunner(object):
     def insert_memory(self, memory_text, date=None, hour=None, minute=None):
         if date is None:
             date = datetime.now().strftime("%Y-%m-%d")
-        if hour and minute is None:
+        if hour is None and minute is None:
             sql_str = "INSERT INTO memories ('date', 'text') VALUES ('%s', '%s')" % (date, memory_text)
         elif minute is None:
             sql_str = "INSERT INTO memories ('date', 'text', 'hour') VALUES ('%s', '%s', '%s')" % (date, memory_text, hour)
