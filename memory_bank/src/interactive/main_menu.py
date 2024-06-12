@@ -20,6 +20,36 @@ def print_memories(memories):
         else:
             print("\t %s:%s %s  > %s" % (memory_hour, memory_minute, am_pm, memory_text))
 
+import calendar
+import tkinter as tk
+
+def show_calendar(year, month):
+    # Create a calendar instance
+    cal = calendar.monthcalendar(year, month)
+
+    # Create a Tkinter window
+    root = tk.Tk()
+    root.title(f"Calendar - {calendar.month_name[month]} {year}")
+
+    # Create a label for the month and year
+    label = tk.Label(root, text=f"{calendar.month_name[month]} {year}", font=("Helvetica", 16))
+    label.pack()
+
+    # Create a frame to hold the calendar
+    frame = tk.Frame(root)
+    frame.pack()
+
+    # Create labels for each day in the calendar
+    for week in cal:
+        for day in week:
+            if day == 0:
+                tk.Label(frame, text="   ", width=4).pack(side=tk.LEFT)
+            else:
+                tk.Label(frame, text=f"{day:2}", width=4).pack(side=tk.LEFT)
+
+    root.mainloop()
+
+
 class MainMenu(InteractiveMenu):
 
     def __init__(self, manager, path=[]):
@@ -31,7 +61,7 @@ class MainMenu(InteractiveMenu):
         ]
 
     def title(self):
-        return "Main"
+        return "Memory Bank"
 
 class RecordMemoryMenu(InteractiveMenu):
 
@@ -90,6 +120,7 @@ class ReadMemoriesMenu(InteractiveMenu):
             ReadTodaysMemoriesMenu(manager, self.path),
             ReadYesterdaysMemoriesMenu(manager, self.path),
             ReadWeekMemoriesMenu(manager, self.path),
+            ReadCalendarMemoriesMenu(manager, self.path),
             ReadDatesMemoriesMenu(manager, self.path),
             KeywordSearchMenu(manager, self.path)
         ]
@@ -148,6 +179,17 @@ class ReadWeekMemoriesMenu(InteractiveMenu):
 
     def main_loop(self):
         self.print_prior_week_memories()
+
+class ReadCalendarMemoriesMenu(InteractiveMenu):
+
+    def title(self):
+        return "Calendar"
+
+    def main_loop(self):
+        today = datetime.now()
+        year = today.year
+        month = today.month
+        show_calendar(year, month)
 
 class ReadDatesMemoriesMenu(InteractiveMenu):
 

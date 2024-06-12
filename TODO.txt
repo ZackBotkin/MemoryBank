@@ -1,17 +1,42 @@
-### todo
+#########################
+features
+#########################
 
-<features>
     - configuration to allow certain terms to auto filter out
+
     - auto database backup
 
-<bugs>
+    - "synopsis" of date
+        -- meant to be like a general description of the date as a whole, not an individual thing i did
+        -- thoughts/feelings, etc
+
+#########################
+bugs
+#########################
+
     - weird formatting on the time
 
+    - 12pm showing up as 12 am
 
-### done
-<features>
+
+----------------------------------------------------------------------------
+
+
+#########################
+done features
+#########################
+
     - allow time to be captured and saved
+
     - allow time to be displayed if there is a time
+
     - add the ability to display time across all reads
-<bugs>
+
+    - make it so that the title doesnt say "Main" make it say "MemoryBank" or something
+
+
+#########################
+done bugs
+#########################
+
     - weeks feature does not appear to work as expected
