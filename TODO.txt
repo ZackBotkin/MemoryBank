@@ -4,11 +4,10 @@ features
 
     - configuration to allow certain terms to auto filter out
 
+    - configuration to allow thoughts to figure out
+
     - auto database backup
 
-    - "synopsis" of date
-        -- meant to be like a general description of the date as a whole, not an individual thing i did
-        -- thoughts/feelings, etc
 
 #########################
 bugs
@@ -18,12 +17,16 @@ bugs
 
     - 12pm showing up as 12 am
 
+#########################
+Refactor/Other
+#########################
+
 
 ----------------------------------------------------------------------------
 
 
 #########################
-done features
+Done Features
 #########################
 
     - allow time to be captured and saved
@@ -34,9 +37,23 @@ done features
 
     - make it so that the title doesnt say "Main" make it say "MemoryBank" or something
 
+    - "synopsis" of date
+        -- meant to be like a general description of the date as a whole, not an individual thing i did
+        -- thoughts/feelings, etc
+        -- going to just call this "thoughts"
+
 
 #########################
-done bugs
+Done Bugs
 #########################
 
     - weeks feature does not appear to work as expected
+
+#########################
+Done Refactor/Other
+#########################
+
+    - honestly probably dont need "remove"
+
+    - split the interactive menu code up a little bit more
+
