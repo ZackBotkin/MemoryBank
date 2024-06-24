@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 from interactive_menu.src.interactive_menu import InteractiveMenu
 
-
-
 def print_memories(memories):
     for memory in memories:
         memory_text = memory[1]
@@ -47,7 +45,52 @@ def print_memories_and_thoughts(memories, thoughts):
 import calendar
 import tkinter as tk
 
-def show_calendar(year, month):
+class ToolTip:
+    def __init__(self, widget, text='widget info'):
+        self.widget = widget
+        self.text = text
+        self.tip_window = None
+        self.id = None
+        self.x = self.y = 0
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.leave)
+
+    def enter(self, event=None):
+        self.schedule()
+
+    def leave(self, event=None):
+        self.unschedule()
+        self.hidetip()
+
+    def schedule(self):
+        self.unschedule()
+        self.id = self.widget.after(500, self.showtip)
+
+    def unschedule(self):
+        id = self.id
+        self.id = None
+        if id:
+            self.widget.after_cancel(id)
+
+    def showtip(self, event=None):
+        x, y, _cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 25
+        y = y + cy + self.widget.winfo_rooty() + 25
+        self.tip_window = tw = tk.Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = tk.Label(tw, text=self.text, justify=tk.LEFT,
+                         background="#ffffe0", relief=tk.SOLID, borderwidth=1,
+                         font=("tahoma", "8", "normal"))
+        label.pack()
+
+    def hidetip(self):
+        tw = self.tip_window
+        self.tip_window = None
+        if tw:
+            tw.destroy()
+
+def show_calendar(year, month, memories, thoughts):
     # Create a calendar instance
     cal = calendar.monthcalendar(year, month)
 
@@ -63,13 +106,34 @@ def show_calendar(year, month):
     frame = tk.Frame(root)
     frame.pack()
 
+    # Create labels for the days of the week
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    for i, day in enumerate(days):
+        tk.Label(frame, text=day, width=4).grid(row=0, column=i)
+
+    memories_data = {}
+    for memory in memories:
+        date_str = memory[0]
+        memory_text = memory[1]
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+        if date.year == year and date.month == month:
+            if date.day not in memories_data:
+                memories_data[date.day] = []
+            memories_data[date.day].append(memory_text)
+
     # Create labels for each day in the calendar
-    for week in cal:
-        for day in week:
+    for week_idx, week in enumerate(cal):
+        for day_idx, day in enumerate(week):
             if day == 0:
-                tk.Label(frame, text="   ", width=4).pack(side=tk.LEFT)
+                tk.Label(frame, text="   ", width=4).grid(row=week_idx + 1, column=day_idx)
             else:
-                tk.Label(frame, text=f"{day:2}", width=4).pack(side=tk.LEFT)
+                date_label = tk.Label(frame, text=f"{day:2}", width=4)
+                date_label.grid(row=week_idx + 1, column=day_idx)
+                memories_for_day = memories_data.get(day, [])
+                message = f"No memories for today"
+                if len(memories_for_day) > 0:
+                    message = '\n'.join(memories_for_day)
+                ToolTip(date_label, text=message)
 
     root.mainloop()
 
@@ -153,7 +217,9 @@ class ReadCalendarMemoriesMenu(InteractiveMenu):
         today = datetime.now()
         year = today.year
         month = today.month
-        show_calendar(year, month)
+        memories = self.manager.get_memories()
+        thoughts = self.manager.get_thoughts()
+        show_calendar(year, month, memories, thoughts)
 
 class ReadDatesMemoriesMenu(InteractiveMenu):
 
