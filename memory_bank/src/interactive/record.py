@@ -38,11 +38,11 @@ class RecordMemoryMenu(InteractiveMenu):
                     "allow_empty": False
                 },
                 {
-                    "question": "What time did this occur? (HH:MM in military time) Hit enter to skip",
+                    "question": "What time did this occur? (HH:MM in military time) Hit enter for now",
                     "expected_response_type": "HHMM_Time",
                     "return_as": "time",
-                    "default": None,
-                    "allow_empty": True
+                    "default": datetime.now().strftime("%H:%M"),
+                    "allow_empty": False
                 }
             ]
         )
@@ -56,12 +56,8 @@ class RecordMemoryMenu(InteractiveMenu):
                 return
         memory = form_results["memory"]["value"]
         date = form_results["date"]["value"]
-        time = form_results["time"]["value"] if "time" in form_results else None
-        if time is not None:
-            hour, minute = time.split(':')
-        else:
-            hour = None
-            minute = None
+        time = form_results["time"]["value"]
+        hour, minute = time.split(':')
         self.manager.record_memory(memory, date, hour, minute)
 
 class RecordThoughtMenu(InteractiveMenu):
